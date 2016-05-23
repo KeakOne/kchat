@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>keanus chat</title>
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<title>keanus chat with socket.io and node.js</title>
+	<link rel="stylesheet" type="text/css" href="./css/styles.css">
+	<style>
+		#chat {
+			height: 500px;
+		}
+	</style>
 </head>
 <body>
-		<div class="chat">
+
+
+
+				<div id="chat"></div>
+				<form id="send-message">
+					<input id="message" size="35"></input>
+					<input type="submit"></input>
+				</form>
+<!-- 		<div class="chat">
 				<input type="text" class="chat-name" placeholder="enter your username">
 				<div class="chat-messages">
 				<div class="chat-message">
@@ -17,8 +30,26 @@
 				</div>
 				<textarea class="chat-textarea" placeholder="whats on your mind?"></textarea>
 				<div class="chat-status">Status:<span>Idle</span></div>
-		</div>
+		</div> -->
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			jQuery(function($){
+				var socket = io.connect();
+				var $messageForm = $('#send-message');
+				var $messageBox = $('#message');
+				var $chat = $('#chat');
 
-			<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+				$messageForm.submit(function(e) {
+					e.preventDefault();
+					socket.emit('send message', $messageBox.val());
+					$messageBox.val('');
+				});
+
+				socket.on('new message', function(data) {
+					$chat.append(data + "<br/>");
+				})
+				})
+		</script>
 </body>
 </html>
